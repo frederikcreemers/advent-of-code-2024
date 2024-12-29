@@ -1,0 +1,56 @@
+width: 101
+height: 103
+
+xhalf: width / 2
+yhalf: height / 2
+
+lines: read.lines "input.txt"
+r: {/p=(\d+),(\d+) v=(-?\d+),(-?\d+)/} 
+
+q1: 0
+q2: 0
+q3: 0
+q4: 0
+
+loop lines [line][
+    numbers: match.capture line r
+    numbers: numbers\0
+    print numbers
+    px: to :integer numbers\0
+    py: to :integer numbers\1
+    vx: to :integer numbers\2
+    vy: to :integer numbers\3
+
+    if? (vx < 0) [
+        vx: width + vx
+    ]
+
+    if? (vy < 0) [
+        vy: height + vy
+    ]
+
+    fx: (px + (100 * vx)) % width
+    fy: (py + (100 * vy)) % height
+    print render "fx: |fx| fy: |fy|"
+
+    if? ((fx <> xhalf) ∧     (fy <> yhalf)) [
+        if? (fx < xhalf) [
+            if? (fy < yhalf) [
+                q1: q1 + 1
+            ] else [
+                q2: q2 + 1
+            ]
+        ] else [
+            if? (fy < yhalf) [
+                q3: q3 + 1
+            ] else [
+                q4: q4 + 1
+            ]
+        ]
+    ]
+]
+
+result: q1 * q2 * q3 * q4
+print render "q1: |q1|, q2 |q2|, q3 |q3| q4 |q4|"
+print render "part 1: |result|"
+
